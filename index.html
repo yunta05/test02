@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>〇凸するまでいくらかかるかガチャシミュレータ</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
+      background: #f6f7fb;
+    }
+
+    body {
+      margin: 0;
+      padding: 32px 16px 48px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+      max-width: 560px;
+      width: 100%;
+      padding: 28px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    p {
+      margin-top: 0;
+      color: #4b5563;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 8px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 10px;
+      background: #3b82f6;
+      color: #ffffff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 12px;
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-weight: 600;
+      min-height: 24px;
+    }
+
+    .meta {
+      margin-top: 12px;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>〇凸するまでいくらかかるかガチャシミュレータ</h1>
+    <p>必要な凸数・1回の価格・SSR確率を入力すると、ランダムにガチャを回して必要凸数に達するまでの金額を計算します。</p>
+
+    <form id="gacha-form">
+      <div>
+        <label for="target">必要凸数</label>
+        <input id="target" name="target" type="number" min="1" value="6" required />
+      </div>
+      <div>
+        <label for="price">一回の価格（円）</label>
+        <input id="price" name="price" type="number" min="1" value="300" required />
+      </div>
+      <div>
+        <label for="rate">SSR確率（%）</label>
+        <input id="rate" name="rate" type="number" min="0" max="100" step="0.1" value="3" required />
+      </div>
+      <button type="submit">シミュレーションする</button>
+    </form>
+
+    <div class="result" id="result">ここに結果が表示されます。</div>
+    <div class="meta" id="meta"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("gacha-form");
+    const result = document.getElementById("result");
+    const meta = document.getElementById("meta");
+
+    const formatYen = (value) => new Intl.NumberFormat("ja-JP").format(value);
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const target = Number(form.target.value);
+      const price = Number(form.price.value);
+      const ratePercent = Number(form.rate.value);
+      const rate = ratePercent / 100;
+
+      let pulls = 0;
+      let dupes = 0;
+
+      while (dupes < target) {
+        pulls += 1;
+        if (Math.random() < rate) {
+          dupes += 1;
+        }
+      }
+
+      const totalCost = pulls * price;
+      result.textContent = `${target}凸までにかかった金額は${formatYen(totalCost)}円です！`;
+      meta.textContent = `総回数: ${pulls}回 / SSR確率: ${ratePercent}%`;
+    });
+  </script>
+</body>
+</html>
