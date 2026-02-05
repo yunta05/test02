@@ -93,7 +93,7 @@
 <body>
   <div class="container">
     <h1>ガチャ金額シミュレータ</h1>
-    <p>必要な凸数・1回の価格・SSR確率を入力すると、ランダムにガチャを回して必要凸数に達するまでの金額を計算します。</p>
+    <p>必要枚数・1回の価格・SSR確率を入力すると、ランダムにガチャを回して必要枚数に達するまでの金額を計算します。</p>
 
     <form id="gacha-form">
       <div>
@@ -148,7 +148,7 @@
       const winDetail = winPulls
         .map((pull, index) => `${index + 1}枚目${pull}回`)
         .join("、");
-      result.textContent = `${target}凸までにかかった金額は${formatYen(totalCost)}円です！`;
+      result.textContent = `${target}枚出るまでにかかった金額は${formatYen(totalCost)}円です！`;
       meta.textContent = `総回数: ${pulls}回 / SSR確率: ${ratePercent}%`;
       detail.textContent = winDetail ? `当選内訳: ${winDetail}` : "当選内訳: なし";
     });
