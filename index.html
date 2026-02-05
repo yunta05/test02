@@ -106,19 +106,21 @@
       </div>
       <div>
         <label for="rate">SSR確率（%）</label>
-        <input id="rate" name="rate" type="number" min="0" max="100" step="0.1" value="3" required />
+        <input id="rate" name="rate" type="number" min="0" max="100" step="0.01" value="3.00" required />
       </div>
       <button type="submit">シミュレーションする</button>
     </form>
 
     <div class="result" id="result">ここに結果が表示されます。</div>
     <div class="meta" id="meta"></div>
+    <div class="meta" id="detail"></div>
   </div>
 
   <script>
     const form = document.getElementById("gacha-form");
     const result = document.getElementById("result");
     const meta = document.getElementById("meta");
+    const detail = document.getElementById("detail");
 
     const formatYen = (value) => new Intl.NumberFormat("ja-JP").format(value);
 
@@ -132,17 +134,23 @@
 
       let pulls = 0;
       let dupes = 0;
+      const winPulls = [];
 
       while (dupes < target) {
         pulls += 1;
         if (Math.random() < rate) {
           dupes += 1;
+          winPulls.push(pulls);
         }
       }
 
       const totalCost = pulls * price;
+      const winDetail = winPulls
+        .map((pull, index) => `${index + 1}枚目${pull}回`)
+        .join("、");
       result.textContent = `${target}凸までにかかった金額は${formatYen(totalCost)}円です！`;
       meta.textContent = `総回数: ${pulls}回 / SSR確率: ${ratePercent}%`;
+      detail.textContent = winDetail ? `当選内訳: ${winDetail}` : "当選内訳: なし";
     });
   </script>
 </body>
